@@ -5,7 +5,7 @@ import suppliers from './suppliers'
 
 export default createStore({
   getters: {
-    backendUrl: () => 'http://localhost:8000'
+    backendUrl: () => 'https://nix-shop-backend.herokuapp.com'
   },
   modules: {
     user,

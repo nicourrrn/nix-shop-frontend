@@ -1,5 +1,5 @@
 import axios from 'axios'
-const backendUrl = 'http://localhost:8000'
+const backendUrl = 'https://nix-shop-backend.herokuapp.com'
 
 export default {
   state: {
