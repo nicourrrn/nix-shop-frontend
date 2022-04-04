@@ -11,7 +11,7 @@
 
 <script>
 import axios from 'axios'
-import CompBasket from '@/components/CompBasket'
+import CompBasket from '../../components/OldBasketElement'
 
 export default {
   name: 'CompletedBasketsView',

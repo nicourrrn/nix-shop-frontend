@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import ProductListElement from '@/components/ProductListElement'
+import ProductListElement from '../../components/MenuElement'
 export default {
   name: 'SupplierView',
   computed: {

@@ -1,54 +1,51 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-import MenuView from '@/views/MenuView'
-import ProductView from '@/views/ProductView'
-import BasketView from '@/views/BasketView'
-import LoginView from '@/views/LoginView'
-import SupplierView from '@/views/SupplierView'
-import SuppliersView from '@/views/SuppliersView'
-import CompletedBasketsView from '@/views/CompletedBasketsView'
+// Products
+import Menu from '../views/Products/Menu'
+import Product from '../views/Products/Product'
+// Supplier
+import Supplier from '../views/Supplier/Supplier'
+import SupplierList from '../views/Supplier/SupplierList'
+// User
+import Auth from '../views/User/Auth'
+import Basket from '../views/User/Basket'
+import OldBaskets from '../views/User/OldBaskets'
 
 const routes = [
   {
-    path: '/',
+    path: '/products',
     name: 'menu',
-    component: MenuView
+    component: Menu
   },
   {
     path: '/products/:id',
     name: 'product',
-    component: ProductView
+    component: Product
   },
   {
-    path: '/suppliers/all',
+    path: '/suppliers',
     name: 'suppliers',
-    component: SuppliersView
+    component: SupplierList
   },
   {
     path: '/suppliers/:id',
     name: 'supplier',
-    component: SupplierView
+    component: Supplier
   },
   {
-    path: '/basket',
+    path: '/user/auth',
+    name: 'auth',
+    component: Auth
+  },
+  {
+    path: '/user/basket',
     name: 'basket',
-    component: BasketView
+    component: Basket
   },
   {
-    path: '/basket/all',
-    name: 'all_basket',
-    component: CompletedBasketsView
-  },
-  {
-    path: '/login',
-    name: 'login',
-    component: LoginView
-  },
-  {
-    path: '/about',
-    name: 'about',
-    component: () =>
-      import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
+    path: '/user/basket/old',
+    name: 'old_basket',
+    component: OldBaskets
   }
 ]
 

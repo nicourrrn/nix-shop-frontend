@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import SupplierListElement from '../components/SupplierListElement'
+import SupplierListElement from '../../components/SupplierListElement'
 
 export default {
   name: 'SuppliersView',
