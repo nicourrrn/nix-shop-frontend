@@ -1,17 +1,16 @@
 <template>
   <div class="baskets">
-    <CompBasket
+    <Basket
     v-for="basket of baskets"
     :key="basket.id"
     :basket="basket"
     >
-    </CompBasket>
+    </Basket>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
-import CompBasket from '../../components/OldBasketElement'
+import Basket from '../../components/OldBasketElement'
 
 export default {
   name: 'CompletedBasketsView',
@@ -20,28 +19,11 @@ export default {
       baskets: []
     }
   },
-  methods: {
-    async getBaskets () {
-      const accessToken = this.$store.getters['user/userData'].accessToken
-      console.log(accessToken)
-      if (accessToken.length === 0) {
-        alert('Need login', accessToken)
-        return
-      }
-      let response = []
-      try {
-        response = (await axios.get(`${this.$store.getters.backendUrl}/basket/all`, { headers: { 'Access-Token': accessToken } })).data
-      } catch (e) {
-        alert(e)
-      }
-      console.log(response)
-      this.baskets = response
-    }
-  },
   mounted () {
-    this.getBaskets()
+    this.$store.dispatch('user/getOldBaskets')
+    this.baskets = this.$store.getters['user/oldBaskets']
   },
-  components: { CompBasket }
+  components: { Basket }
 }
 </script>
 
