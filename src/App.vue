@@ -19,25 +19,11 @@ export default {
   computed: {
     LoginText () {
       const user = this.$store.getters['user/userData']
-      const userDefined = user !== undefined
-      const haveName = typeof (user.name) === 'string'
-      const lenMoreZero = user.name.length > 0
-      console.log(userDefined, haveName, lenMoreZero)
-      if (userDefined && haveName && lenMoreZero) {
-        return `Привіт, ${user.name}`
-      } else {
-        return 'Login'
-      }
-    }
-  },
-  data () {
-    return {
-      updater: undefined
+      return user.name.length > 0 ? `Привіт, ${user.name}` : 'Login'
     }
   },
   mounted () {
-    this.$store.dispatch('user/refresh')
-    this.updater = setInterval(() => this.$store.dispatch('user/refresh'), 50000)
+    setInterval(() => this.$store.dispatch('user/refresh'), 50000)
     setInterval(() => this.$store.dispatch('suppliers/getData'), 10000)
   }
 }
