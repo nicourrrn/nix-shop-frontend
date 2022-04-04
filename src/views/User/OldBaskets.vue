@@ -22,7 +22,7 @@ export default {
   },
   methods: {
     async getBaskets () {
-      const accessToken = this.$store.getters.userData.accessToken
+      const accessToken = this.$store.getters['user/userData'].accessToken
       console.log(accessToken)
       if (accessToken.length === 0) {
         alert('Need login', accessToken)

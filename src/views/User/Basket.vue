@@ -1,5 +1,5 @@
 <template>
-  <div v-if="$store.getters.userData.accessToken === ''">
+  <div v-if="$store.getters['user/userData'].accessToken === ''">
     <h1>Необхідна авторизація!</h1>
   </div>
   <div v-else>
@@ -10,10 +10,10 @@
         <input type="button" value="Замовити" @click="buy"/>
       </div>
       <div class="product-list">
-        <div class="product" v-for="(productInfo, index) in $store.getters.checkedProducts" :key="index">
+        <div class="product" v-for="(productInfo, index) in $store.getters['user/basket']" :key="index">
           <ProductListElement :product="productInfo.product" :count="productInfo.count"></ProductListElement>
           <input type="number" v-model="productInfo.count" max="20" min="1" />
-          <input type="button" value="Видалити" @click="() => $store.commit('removeProductFromBasket', productInfo.product.id)">
+          <input type="button" value="Видалити" @click="() => $store.commit('user/removeProduct', productInfo.product.id)">
         </div>
       </div>
   </div>
@@ -35,8 +35,8 @@ export default {
   methods: {
     buy () {
       if (this.address !== '') {
-        this.$store.commit('setUser', { address: this.address })
-        this.$store.dispatch('sendBasket')
+        this.$store.commit('user/setUser', { address: this.address })
+        this.$store.dispatch('user/sendBasket')
         this.$router.push('/')
       }
     }
@@ -44,7 +44,7 @@ export default {
   computed: {
     forPaymant () {
       let result = 0
-      for (const productInfo of this.$store.getters.checkedProducts) {
+      for (const productInfo of this.$store.getters['user/basket']) {
         result += productInfo.count * productInfo.product.price
       }
       return result

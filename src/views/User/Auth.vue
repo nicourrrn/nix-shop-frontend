@@ -19,7 +19,7 @@
       <input type="button" @click="this.SignUp" value="SignUp" :disabled="password !== copyPassword || password.length === 0 || name.length === 0 || phone.length === 0">
     </div>
     <input type="button" :value="newUser ? 'SingIn' : 'SingUp'" @click="() => newUser = !newUser"/>
-    <input type="button" value="LogOut" @click="() => $store.dispatch('logOut')" />
+    <input type="button" value="LogOut" @click="() => $store.dispatch('user/logOut')" />
   </div>
 </template>
 
@@ -37,14 +37,14 @@ export default {
   },
   methods: {
     SignIn () {
-      this.$store.dispatch('signIn', { phone: this.phone, password: this.password })
+      this.$store.dispatch('user/signIn', { phone: this.phone, password: this.password })
     },
     SignUp () {
-      this.$store.dispatch('signUp', { name: this.name, phone: this.phone, password: this.password })
+      this.$store.dispatch('user/signUp', { name: this.name, phone: this.phone, password: this.password })
     }
   },
   mounted () {
-    const user = this.$store.getters.userData
+    const user = this.$store.getters['user/userData']
     console.log(user)
     this.name = user.name
     this.phone = user.phone

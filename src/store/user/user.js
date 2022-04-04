@@ -1,39 +1,24 @@
 import axios from 'axios'
-const backendUrl = 'https://nix-shop-backend.herokuapp.com'
+import basket from './basket'
 
 export default {
+  namespaced: true,
   state: {
-    checkedProducts: [],
-    address: '',
     name: '',
     phone: '',
     accessToken: ''
   },
   getters: {
-    checkedProducts: (state) => state.checkedProducts,
     userData: (state) => ({
-      address: state.address,
       name: state.name,
       phone: state.phone,
       accessToken: state.accessToken
     })
   },
   mutations: {
-    clearBasket (state) {
-      state.checkedProducts = []
-    },
-    addProductToBasket (state, saledProductInfo) {
-      const productsIds = state.checkedProducts.map(value => value.product.id)
-      if (!productsIds.includes(saledProductInfo.product.id)) {
-        state.checkedProducts.push(saledProductInfo)
-      }
-    },
-    removeProductFromBasket (state, productId) {
-      state.checkedProducts = state.checkedProducts.filter(value => value.product.id !== productId)
-    },
     setUser (state, user) {
       for (const [key, value] of Object.entries(user)) {
-        if (!['address', 'name', 'phone', 'accessToken'].includes(key)) {
+        if (!['name', 'phone', 'accessToken'].includes(key)) {
           console.log(`Error key ${key} with value ${value}`)
         } else {
           console.log(key)
@@ -41,7 +26,6 @@ export default {
         }
       }
       localStorage.setItem('userData', JSON.stringify({
-        address: state.address,
         name: state.name,
         phone: state.phone,
         accessToken: state.accessToken
@@ -63,6 +47,7 @@ export default {
         alert('Empty line')
         return
       }
+      const backendUrl = context.rootGetters.backendUrl
       let response
       try {
         response = (await axios.post(`${backendUrl}/user/signin`,
@@ -92,6 +77,7 @@ export default {
         alert('Empty line')
         return
       }
+      const backendUrl = context.rootGetters.backendUrl
       let response
       try {
         response = (await axios.post(
@@ -118,6 +104,7 @@ export default {
         console.log('access is null')
         return
       }
+      const backendUrl = context.rootGetters.backendUrl
       let response
       try {
         response = (await axios.post(`${backendUrl}/user/refresh`, JSON.stringify(
@@ -137,46 +124,22 @@ export default {
       localStorage.setItem('refreshToken', response.refreshToken)
       context.commit('setUser', newUser)
     },
-    async sendBasket (context) {
-      let savedProducts = context.getters.checkedProducts
-
-      savedProducts = savedProducts.map(v => ({
-        count: v.count,
-        productId: v.product.id,
-        priceOne: v.product.price
-      }))
-
-      const user = context.getters.userData
-      let response
-      try {
-        response = (await axios.post(
-          `${backendUrl}/basket/new`,
-          JSON.stringify({
-            address: user.address,
-            products: savedProducts
-          }),
-          { headers: { 'Access-Token': user.accessToken } }
-        )).data
-      } catch (e) {
-        alert(e)
-        return
-      }
-
-      alert(`Дякуємо за замовлення, ваш номер ${response.basketId}`)
-      context.commit('clearBasket')
-    },
-    async logOut (state) {
+    async logOut (context) {
       localStorage.removeItem('userData')
       localStorage.removeItem('refreshToken')
-      const token = state.getters.userData.accessToken
+      const token = context.getters.userData.accessToken
       if (token === '') {
         return
       }
+      const backendUrl = context.rootGetters.backendUrl
       axios
         .get(`${backendUrl}/user/logout`, { headers: { 'Access-Token': token } })
         .catch(err => alert(err))
-      state.commit('clearBasket')
-      state.commit('setUser', { address: '', name: '', phone: '', accessToken: '' })
+      context.commit('clearBasket')
+      context.commit('setUser', { address: '', name: '', phone: '', accessToken: '' })
     }
+  },
+  modules: {
+    basket
   }
 }

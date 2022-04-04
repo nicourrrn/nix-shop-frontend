@@ -85,21 +85,21 @@ export default {
   },
   computed: {
     addebleIngredients () {
-      return this.$store.getters.ingredients.filter(
+      return this.$store.getters['suppliers/ingredients'].filter(
         (value) =>
           !this.setting.added_ingredient.includes(value) &&
           value.startsWith(this.setting.input_ingredient)
       )
     },
     addebleProductTypes () {
-      return [...this.$store.getters.product_types].filter(
+      return [...this.$store.getters['suppliers/product_types']].filter(
         (value) =>
           (!(this.setting.checked_type === value) || this.setting.checked_type === '') &&
           value.startsWith(this.setting.input_type)
       )
     },
     lookedProducts () {
-      return this.$store.getters.products.filter(
+      return this.$store.getters['suppliers/products'].filter(
         product => this.setting.added_ingredient.every(ingredient => product.ingredients.includes(ingredient)) &&
           (this.setting.checked_type === '' || product.type === this.setting.checked_type)
       )
@@ -109,7 +109,7 @@ export default {
     ProductListElement
   },
   mounted () {
-    this.$store.dispatch('getData')
+    this.$store.dispatch('suppliers/getData')
   }
 }
 </script>

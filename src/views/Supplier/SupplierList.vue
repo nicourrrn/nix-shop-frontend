@@ -15,7 +15,7 @@ export default {
   name: 'SuppliersView',
   data () {
     return {
-      supplierList: this.$store.getters.suppliers
+      supplierList: this.$store.getters['user/suppliers']
     }
   },
   components: {

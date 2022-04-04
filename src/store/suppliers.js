@@ -2,16 +2,17 @@ import axios from 'axios'
 const backendUrl = 'https://nix-shop-backend.herokuapp.com'
 
 export default {
+  namespaced: true,
   state: {
-    allIngredients: [],
-    suppliers: [],
-    products: []
+    ingredients: [],
+    products: [],
+    suppliers: []
   },
   getters: {
-    suppliers: (state) => state.suppliers,
-    ingredients: (state) => state.allIngredients,
+    ingredients: (state) => state.ingredients,
     products: (state) => state.products,
-    product_types: (state) => new Set(state.products.map(value => value.type))
+    product_types: (state) => new Set(state.products.map(value => value.type)),
+    suppliers: (state) => state.suppliers
   },
   mutations: {
     setIngredients (state, newIngredients) {
