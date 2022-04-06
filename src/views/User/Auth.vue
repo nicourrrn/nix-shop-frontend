@@ -1,11 +1,10 @@
 <template>
-  <div class="user" v-if="authed">
-    <input type="button" value="LogOut" @click="() => $store.dispatch('user/logOut')" />
-  </div>
-  <div class="login" v-else>
+  <div class="login">
     <div v-if="!newUser" class="login-form">
       <p>Phone</p>
-      <input type="text" v-model="phone"/>
+      <div class="phone">
+        <span>+380</span><input type="text" v-model="phone"/>
+      </div>
       <p>Password</p>
       <input type="password" v-model="password">
       <input type="button" @click="this.SignIn" value="SignIn" :disabled="phone.length === 0 || password.length === 0">
@@ -14,7 +13,7 @@
       <p>Name</p>
       <input type="text" v-model="name">
       <p>Phone</p>
-      <input type="text" v-model="phone"/>
+      <span>+380</span><input type="text" v-model="phone"/>
       <p>Password</p>
       <input type="password" v-model="password">
       <p>Password again</p>
@@ -40,10 +39,10 @@ export default {
   },
   methods: {
     SignIn () {
-      this.$store.dispatch('user/signIn', { phone: this.phone, password: this.password })
+      this.$store.dispatch('user/signIn', { phone: '+380' + this.phone, password: this.password })
     },
     SignUp () {
-      this.$store.dispatch('user/signUp', { name: this.name, phone: this.phone, password: this.password })
+      this.$store.dispatch('user/signUp', { name: this.name, phone: '+380' + this.phone, password: this.password })
     }
   },
   computed: {
@@ -51,7 +50,9 @@ export default {
       if (this.name === '' && this.newUser) {
         return 'Введите имя'
       } else if (this.phone === '') {
-        return 'Введите Номер телефона'
+        return 'Введите Номер телефона формата'
+      } else if (this.phone.length !== 9 || isNaN(this.phone)) {
+        return 'Неверный формат'
       } else if (this.password === '') {
         return 'Введите пароль'
       } else if (this.password !== this.copyPassword && this.newUser) {
@@ -86,4 +87,8 @@ export default {
   display: flex
   flex-direction: column
   align-content: center
+.phone
+  display: flex
+  *
+    margin-right: 10px
 </style>
