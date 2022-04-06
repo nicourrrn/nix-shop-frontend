@@ -1,4 +1,9 @@
 <template>
+
+  <div v-if="userData.name !== ''">
+    {{ $router.push('/user') }}
+  </div>
+
   <div class="login">
     <div v-if="!newUser" class="login-form">
       <p>Phone</p>
@@ -26,6 +31,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   name: 'LoginView',
   data () {
@@ -46,6 +52,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({ userData: 'user/userData' }),
     status () {
       if (this.name === '' && this.newUser) {
         return 'Введите имя'

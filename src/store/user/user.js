@@ -5,18 +5,20 @@ export default {
   namespaced: true,
   state: {
     name: '',
-    phone: ''
+    phone: '',
+    create_at: ''
   },
   getters: {
     userData: (state) => ({
       name: state.name,
-      phone: state.phone
+      phone: state.phone,
+      create_at: state.create_at
     })
   },
   mutations: {
     setUser (state, user) {
       for (const [key, value] of Object.entries(user)) {
-        if (['name', 'phone'].includes(key)) {
+        if (['name', 'phone', 'create_at'].includes(key)) {
           state[key] = value
         }
       }

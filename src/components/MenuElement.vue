@@ -1,6 +1,6 @@
 <template>
   <div class="element" @click="() => $router.push(`/products/${this.product.id}`)">
-    <img :src="product.image" alt="Image not loaded"/>
+    <img :src="product.image" alt="Image not loaded" this.src="img/undefined.jpg"/>
     <div class="name">{{ product.name }}</div>
     <div class="description">
       <div class="type">Type: {{ product.type }}</div>

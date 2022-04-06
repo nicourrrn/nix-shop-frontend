@@ -10,6 +10,7 @@ import SupplierList from '../views/Supplier/SupplierList'
 import Auth from '../views/User/Auth'
 import Basket from '../views/User/Basket'
 import OldBaskets from '../views/User/OldBaskets'
+import User from '../views/User/User'
 
 const routes = [
   {
@@ -31,6 +32,11 @@ const routes = [
     path: '/suppliers/:id',
     name: 'supplier',
     component: Supplier
+  },
+  {
+    path: '/user',
+    name: 'user',
+    component: User
   },
   {
     path: '/user/auth',

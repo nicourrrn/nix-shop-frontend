@@ -7,7 +7,9 @@
       <div class="right-side">
         <router-link to="/user/basket">Basket</router-link> |
         <router-link to="/user/basket/old">Old baskets</router-link> |
-        <router-link to="/user/auth">{{ LoginText }}</router-link> |
+        <router-link v-if="!isLoggined" to="/user/auth" > Login </router-link>
+        <router-link v-if="isLoggined" to="/user"> Hello, {{ $store.getters['user/userData'].name }} </router-link>
+        |
       </div>
     </nav>
     <router-view />
@@ -17,9 +19,9 @@
 
 export default {
   computed: {
-    LoginText () {
+    isLoggined () {
       const user = this.$store.getters['user/userData']
-      return user.name.length > 0 ? `Привіт, ${user.name}` : 'Login'
+      return user.name.length !== 0
     }
   },
   beforeCreate () {
@@ -32,6 +34,8 @@ export default {
 </script>
 
 <style lang="sass">
+//img
+//  background-image: url('https://i1.wp.com/techdirectarchive.com/wp-content/uploads/2020/06/1_pUEZd8z__1p-7ICIO1NZFA.png?fit=978%2C542&ssl=1')
 #app
   font-family: Avenir, Helvetica, Arial, sans-serif
   -webkit-font-smoothing: antialiased
