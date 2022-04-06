@@ -1,5 +1,4 @@
 import axios from 'axios'
-const backendUrl = 'https://nix-shop-backend.herokuapp.com'
 
 export default {
   namespaced: true,
@@ -11,12 +10,12 @@ export default {
   getters: {
     ingredients: (state) => state.ingredients,
     products: (state) => state.products,
-    product_types: (state) => new Set(state.products.map(value => value.type)),
+    product_types: (state) => [...(new Set(state.products.map(value => value.type)))],
     suppliers: (state) => state.suppliers
   },
   mutations: {
     setIngredients (state, newIngredients) {
-      state.allIngredients = newIngredients
+      state.ingredients = newIngredients
     },
     setSuppliers (state, newSuppliers) {
       state.suppliers = newSuppliers.map(v => { v.menu = []; return v })
@@ -27,18 +26,24 @@ export default {
   },
   actions: {
     async getData (context) {
+      const backendUrl = context.rootGetters.backendUrl
       axios.get(`${backendUrl}/ingredients`)
-        .then(value => {
-          context.commit('setIngredients', value.data)
+        .then(value => context.commit('setIngredients', value.data))
+        .catch(error => {
+          const errorText = error.response.data
+          const errorCode = error.response.status
+          alert(`${errorCode}: ${errorText}`)
         })
-        .catch(e => alert(e))
       let suppliers
       try {
         suppliers = (await axios.get(`${backendUrl}/suppliers`)).data
-      } catch (e) {
-        alert(e)
+      } catch (error) {
+        const errorText = error.response.data
+        const errorCode = error.response.status
+        alert(`${errorCode}: ${errorText}`)
         return
       }
+      context.commit('setSuppliers', suppliers)
       for (const s of suppliers) {
         axios.get(`${backendUrl}/products?id=${s.id}`)
           .then(value => {
@@ -47,9 +52,12 @@ export default {
               context.commit('addProduct', p)
             })
           })
-          .catch(e => { alert(e) })
+          .catch(error => {
+            const errorText = error.response.data
+            const errorCode = error.response.status
+            alert(`${errorCode}: ${errorText}`)
+          })
       }
-      context.commit('setSuppliers', suppliers)
     }
   }
 }

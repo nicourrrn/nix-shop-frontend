@@ -20,14 +20,13 @@ export default {
       state.basket = []
     },
     addProduct (state, product) {
-      // TODO пересмотреть компоновку product
-      const productsIds = state.basket.map(value => value.product.id)
-      if (!productsIds.includes(product.product.id)) {
+      const ids = state.basket.map(product => product.id)
+      if (!ids.includes(product.id)) {
         state.basket.push(product)
       }
     },
-    removeProduct (state, productId) {
-      state.basket = state.basket.filter(value => value.product.id !== productId)
+    removeProduct (state, id) {
+      state.basket = state.basket.filter(product => product.id !== id)
     },
     setAddress (state, address) {
       state.address = address
@@ -36,9 +35,9 @@ export default {
   actions: {
     async sendBasket (context) {
       const savedProducts = context.getters.basket
-        .map(v => ({
-          count: v.count,
-          productId: v.product.id
+        .map(product => ({
+          count: product.count,
+          productId: product.id
         }))
       const address = context.getters.address
       const backendUrl = context.rootGetters.backendUrl

@@ -1,30 +1,33 @@
 <template>
-  <div class="menu">
+  <div v-if="ProductList.length === 0">
+    <h1>Loading</h1>
+  </div>
+  <div v-else class="menu">
     <div class="menu-setting">
       <div class="ingredients-setting">
         <input
-          v-model="setting.input_ingredient"
+          v-model="ingredients.input"
           placeholder="Название ингредиента"
           type="text"
           class="ingredient-input"
         />
-        <div class="ingredients-preview">
+        <div class="ingredients-to-select">
           <div
-            v-for="(ingredient, index) in addebleIngredients.slice(0, 10)"
+            v-for="(ingredient, index) in IngredientToSelect.slice(0, 10)"
             :key="index"
-            class="ingredient"
-            @click="setting.added_ingredient.push(ingredient)"
+            class="ingredient-to-select"
+            @click="ingredients.selected.push(ingredient)"
           >
             {{ ingredient }}
           </div>
         </div>
         <h4>Обрані фільтри</h4>
-        <div class="checked-ingredients">
+        <div class="selected-ingredients">
           <div
-            v-for="(ingredient, index) in this.setting.added_ingredient"
+            v-for="(ingredient, index) in this.ingredients.selected"
             :key="index"
-            class="ingredient"
-            @click="setting.added_ingredient.pop(index)"
+            class="selected-ingredient"
+            @click="ingredients.selected.pop(index)"
           >
             {{ ingredient }}
           </div>
@@ -32,35 +35,35 @@
       </div>
       <div class="type-setting">
         <input
-          v-model="setting.input_type"
-          placeholder="Название типа"
+          v-model="type.input"
+          placeholder="type of product"
           type="text"
-          class="ingredient-input"
+          class="type-input"
         />
-        <div class="ingredients-preview">
+        <div class="type-to-select">
           <div
-            v-for="(type, index) in addebleProductTypes.slice(0, 5)"
+            v-for="(type, index) in TypesToSelect.slice(0, 5)"
             :key="index"
-            class="ingredient"
-            @click="() => setting.checked_type = type"
+            class="type"
+            @click="() => this.type.selected = type"
           >
             {{ type }}
           </div>
         </div>
         <h4>Обрані фільтри</h4>
-        <div class="checked-ingredients">
+        <div class="selected-type">
           <div
-            class="ingredient"
-            @click="() => setting.checked_type = ''"
+            class="type"
+            @click="() => type.selected = ''"
           >
-            {{ setting.checked_type }}
+            {{ type.selected }}
           </div>
         </div>
       </div>
     </div>
     <div class="menu-list">
       <ProductListElement
-        v-for="(product, index) in lookedProducts"
+        v-for="(product, index) in ProductList"
         :product = product
         :key="index"
       ></ProductListElement>
@@ -75,41 +78,40 @@ export default {
   name: 'MenuView',
   data () {
     return {
-      setting: {
-        input_ingredient: '',
-        added_ingredient: [],
-        input_type: '',
-        checked_type: ''
+      ingredients: {
+        input: '',
+        selected: []
+      },
+      type: {
+        input: '',
+        selected: ''
       }
     }
   },
   computed: {
-    addebleIngredients () {
+    IngredientToSelect () {
       return this.$store.getters['suppliers/ingredients'].filter(
         (value) =>
-          !this.setting.added_ingredient.includes(value) &&
-          value.startsWith(this.setting.input_ingredient)
+          !this.ingredients.selected.includes(value) &&
+          value.startsWith(this.ingredients.input)
       )
     },
-    addebleProductTypes () {
-      return [...this.$store.getters['suppliers/product_types']].filter(
+    TypesToSelect () {
+      return this.$store.getters['suppliers/product_types'].filter(
         (value) =>
-          (!(this.setting.checked_type === value) || this.setting.checked_type === '') &&
-          value.startsWith(this.setting.input_type)
+          (!(this.type.selected === value) || this.type.selected === '') &&
+          value.startsWith(this.type.input)
       )
     },
-    lookedProducts () {
+    ProductList () {
       return this.$store.getters['suppliers/products'].filter(
-        product => this.setting.added_ingredient.every(ingredient => product.ingredients.includes(ingredient)) &&
-          (this.setting.checked_type === '' || product.type === this.setting.checked_type)
+        product => this.ingredients.selected.every(ingredient => product.ingredients.includes(ingredient)) &&
+          (this.type.selected === '' || product.type === this.type.selected)
       )
     }
   },
   components: {
     ProductListElement
-  },
-  mounted () {
-    this.$store.dispatch('suppliers/getData')
   }
 }
 </script>

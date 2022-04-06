@@ -1,6 +1,6 @@
 <template>
 <div class="product">
-  <h1 v-if="product === undefined">
+  <h1 v-if="product.name === ''">
     Product not found
   </h1>
   <div v-else class="product">
@@ -13,11 +13,11 @@
       <span class="ingredients">Ingredients: {{ product.ingredients.join(", ") }}</span>
       <div class="info">
         <span class="type">Type: {{product.type}}</span>
-        <span class="price">Price: {{product.price * productCount}}</span>
+        <span class="price">Price: {{product.price * product.count}}</span>
       </div>
       <div class="add">
-        <input type="button" value="Додати до кошика" @click="addToBasket" />
-        <input type="number" v-model="productCount" min="1" max="20">
+        <input type="button" :disabled="inBasket" :value=" inBasket ? 'exist' : 'Додати до кошика'" @click="addToBasket" />
+        <input type="number" v-model="product.count" min="1" max="20">
       </div>
     </div>
   </div>
@@ -27,27 +27,53 @@
 <script>
 export default {
   name: 'ProductView',
-  computed: {
-    product () {
-      for (const value of this.$store.getters['suppliers/products']) {
-        if (value.id === Number(this.$route.params.id)) {
-          return value
-        }
+  data () {
+    return {
+      inBasket: false,
+      product: {
+        count: 0,
+        supplier: {
+          id: 0,
+          name: ''
+        },
+        ingredients: [],
+        name: '',
+        price: 0,
+        type: ''
       }
-      return undefined
     }
   },
   methods: {
     addToBasket () {
-      this.$store.commit('user/addProduct', { product: this.product, count: this.productCount })
-      this.$router.push('/basket')
+      this.$store.commit('user/addProduct', this.product)
+      this.$router.push('/user/basket')
     }
   },
-  data () {
-    return {
-      productCount: 1
+  mounted () {
+    for (const value of this.$store.getters['suppliers/products']) {
+      if (value.id === Number(this.$route.params.id)) {
+        console.log(value)
+        this.product = value
+        break
+      }
+    }
+    if (this.product.name === '') {
+      return
+    }
+    this.product.count = 1
+    this.inBasket = this.$store.getters['user/basket'].includes(this.product.id)
+  },
+  watch: {
+    'product.count' (newValue) {
+      newValue = Math.round(newValue)
+      if (newValue > 20) {
+        this.product.count = 20
+      } else if (newValue < 1) {
+        this.product.count = 1
+      }
     }
   }
+
 }
 </script>
 
