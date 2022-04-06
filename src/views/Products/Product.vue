@@ -13,7 +13,7 @@
       <span class="ingredients">Ingredients: {{ product.ingredients.join(", ") }}</span>
       <div class="info">
         <span class="type">Type: {{product.type}}</span>
-        <span class="price">Price: {{product.price * product.count}}</span>
+        <span class="price">Price: {{ (product.price * product.count).toFixed(2) }}</span>
       </div>
       <div class="add">
         <input type="button" :disabled="inBasket" :value=" inBasket ? 'exist' : 'Додати до кошика'" @click="addToBasket" />
@@ -60,8 +60,11 @@ export default {
     if (this.product.name === '') {
       return
     }
-    this.product.count = 1
-    this.inBasket = this.$store.getters['user/basket'].includes(this.product.id)
+    if (this.product.count === undefined) {
+      this.product.count = 1
+    }
+
+    this.inBasket = this.$store.getters['user/basket'].map(value => value.id).includes(this.product.id)
   },
   watch: {
     'product.count' (newValue) {

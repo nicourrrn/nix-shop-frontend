@@ -10,10 +10,10 @@
         <input type="button" value="Замовити" @click="buy"/>
       </div>
       <div class="product-list">
-        <div class="product" v-for="(productInfo, index) in $store.getters['user/basket']" :key="index">
-          <ProductListElement :product="productInfo.product" :count="productInfo.count"></ProductListElement>
-          <input type="number" v-model="productInfo.count" max="20" min="1" />
-          <input type="button" value="Видалити" @click="() => $store.commit('user/removeProduct', productInfo.product.id)">
+        <div class="product" v-for="(product, index) in $store.getters['user/basket']" :key="index">
+          <ProductListElement :product="product"></ProductListElement>
+          <input type="number" @change="() => watchCount(product.count)" v-model="product.count" min="1" max="20" />
+          <input type="button" value="Видалити" @click="() => $store.commit('user/removeProduct', product.id)">
         </div>
       </div>
   </div>
@@ -37,17 +37,22 @@ export default {
       if (this.address !== '') {
         this.$store.commit('user/setUser', { address: this.address })
         this.$store.dispatch('user/sendBasket')
-        this.$router.push('/')
+        this.$router.push('/products')
+      }
+    },
+    watchCount (productCount) {
+      productCount = Math.round(productCount)
+      if (productCount > 20) {
+        productCount = 20
+      } else if (productCount < 1) {
+        productCount = 1
       }
     }
   },
   computed: {
     forPaymant () {
-      let result = 0
-      for (const productInfo of this.$store.getters['user/basket']) {
-        result += productInfo.count * productInfo.product.price
-      }
-      return result
+      const basket = this.$store.getters['user/basket']
+      return basket.length === 0 ? 0 : basket.reduce((total, value) => total + (value.count * value.price), 0)
     }
   }
 }

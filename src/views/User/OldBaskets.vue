@@ -1,5 +1,9 @@
 <template>
-  <div class="baskets">
+  <div v-if="baskets.length === 0">
+    <span> Вы еще не делали заказов! </span>
+    <input type="button" value="Перейти к продуктам" @click="() => $router.push('/products')" />
+  </div>
+  <div v-else class="baskets">
     <Basket
     v-for="basket of baskets"
     :key="basket.id"

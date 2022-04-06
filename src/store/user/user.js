@@ -61,7 +61,7 @@ export default {
         return
       }
       context.commit('setUser', {
-        name: response.name,
+        name: userForm.name,
         phone: userForm.phone
       })
       localStorage.setItem('Tokens', JSON.stringify({
