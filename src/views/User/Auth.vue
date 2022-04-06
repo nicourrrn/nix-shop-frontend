@@ -1,5 +1,8 @@
 <template>
-  <div class="login">
+  <div class="user" v-if="authed">
+    <input type="button" value="LogOut" @click="() => $store.dispatch('user/logOut')" />
+  </div>
+  <div class="login" v-else>
     <div v-if="!newUser" class="login-form">
       <p>Phone</p>
       <input type="text" v-model="phone"/>
@@ -16,10 +19,10 @@
       <input type="password" v-model="password">
       <p>Password again</p>
       <input type="password" v-model="copyPassword">
-      <input type="button" @click="this.SignUp" value="SignUp" :disabled="password !== copyPassword || password.length === 0 || name.length === 0 || phone.length === 0">
+      <input type="button" @click="this.SignUp" value="SignUp" :disabled="status !== ''">
     </div>
+    <p class="status">{{ status }}</p>
     <input type="button" :value="newUser ? 'SingIn' : 'SingUp'" @click="() => newUser = !newUser"/>
-    <input type="button" value="LogOut" @click="() => $store.dispatch('user/logOut')" />
   </div>
 </template>
 
@@ -41,6 +44,23 @@ export default {
     },
     SignUp () {
       this.$store.dispatch('user/signUp', { name: this.name, phone: this.phone, password: this.password })
+    }
+  },
+  computed: {
+    status () {
+      if (this.name === '' && this.newUser) {
+        return 'Введите имя'
+      } else if (this.phone === '') {
+        return 'Введите Номер телефона'
+      } else if (this.password === '') {
+        return 'Введите пароль'
+      } else if (this.password !== this.copyPassword && this.newUser) {
+        return 'Пароли не равны'
+      }
+      return ''
+    },
+    authed () {
+      return this.$store.getters['user/userData'].name !== ''
     }
   },
   mounted () {

@@ -22,9 +22,10 @@ export default {
       return user.name.length > 0 ? `Привіт, ${user.name}` : 'Login'
     }
   },
-  mounted () {
-    setInterval(() => this.$store.dispatch('user/refresh'), 50000)
-    setInterval(() => this.$store.dispatch('suppliers/getData'), 10000)
+  beforeCreate () {
+    this.$store.dispatch('user/getName')
+    this.$store.dispatch('update')
+    setInterval(() => this.$store.dispatch('update'), 30000)
   }
 }
 

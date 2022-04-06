@@ -1,15 +1,20 @@
 <template>
-  <div v-if="baskets.length === 0">
-    <span> Вы еще не делали заказов! </span>
-    <input type="button" value="Перейти к продуктам" @click="() => $router.push('/products')" />
+  <div v-if="$store.getters['user/userData'].name === ''">
+    <h1>Необхідна авторизація!</h1>
   </div>
-  <div v-else class="baskets">
-    <Basket
-    v-for="basket of baskets"
-    :key="basket.id"
-    :basket="basket"
-    >
-    </Basket>
+  <div v-else>
+    <div v-if="baskets.length === 0">
+      <span> Вы еще не делали заказов! </span>
+      <input type="button" value="Перейти к продуктам" @click="() => $router.push('/products')" />
+    </div>
+    <div v-else class="baskets">
+      <Basket
+        v-for="basket of baskets"
+        :key="basket.id"
+        :basket="basket"
+      >
+      </Basket>
+    </div>
   </div>
 </template>
 

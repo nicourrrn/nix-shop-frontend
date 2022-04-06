@@ -18,6 +18,7 @@ export default {
     clearBasket (state) {
       state.address = ''
       state.basket = []
+      state.oldBaskets = []
     },
     addProduct (state, product) {
       const ids = state.basket.map(product => product.id)
@@ -66,7 +67,6 @@ export default {
     async getOldBaskets (context) {
       const tokenString = localStorage.getItem('Tokens')
       if (tokenString === null) {
-        alert('You need login')
         return
       }
       const { access } = JSON.parse(tokenString)

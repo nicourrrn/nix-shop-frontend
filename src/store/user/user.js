@@ -71,7 +71,7 @@ export default {
     },
     async refresh (context) {
       const tokensString = localStorage.getItem('Tokens')
-      if (tokensString === undefined) {
+      if (tokensString === null) {
         return
       }
       const { access, refresh } = JSON.parse(tokensString)
@@ -98,7 +98,14 @@ export default {
       }))
     },
     async logOut (context) {
-      const { access, refresh } = JSON.parse(localStorage.getItem('Tokens'))
+      const tokensString = localStorage.getItem('Tokens')
+      if (tokensString === null) {
+        return
+      }
+      const { access, refresh } = JSON.parse(tokensString)
+      if (refresh === undefined || access === undefined) {
+        return
+      }
       if (refresh !== undefined && access !== undefined) {
         const backendUrl = context.rootGetters.backendUrl
         axios
@@ -113,8 +120,26 @@ export default {
       context.commit('setUser', { name: '', phone: '' })
       localStorage.removeItem('userData')
       localStorage.removeItem('Tokens')
+    },
+    async getName (context) {
+      const tokensString = localStorage.getItem('Tokens')
+      if (tokensString === null) {
+        return
+      }
+      const { access } = JSON.parse(tokensString)
+      if (access === undefined) {
+        return
+      }
+      const backendUrl = context.rootGetters.backendUrl
+      axios
+        .get(`${backendUrl}/user`, { headers: { 'Access-Token': access } })
+        .then(response => context.commit('setUser', response.data))
+        .catch(error => {
+          const errorText = error.response.data
+          const errorCode = error.response.status
+          alert(`${errorCode}: ${errorText}`)
+        })
     }
-
   },
   modules: {
     basket

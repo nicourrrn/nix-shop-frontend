@@ -1,5 +1,5 @@
 <template>
-  <div v-if="$store.getters['user/userData'].accessToken === ''">
+  <div v-if="$store.getters['user/userData'].name === ''">
     <h1>Необхідна авторизація!</h1>
   </div>
   <div v-else>
