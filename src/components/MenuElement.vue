@@ -4,7 +4,7 @@
     <div class="name">{{ product.name }}</div>
     <div class="description">
       <div class="type">Type: {{ product.type }}</div>
-      <div class="price">Price: {{ product.price * product.count }}</div>
+      <div class="price">Price: {{ product.price * (withCount ? product.count : 1) }}</div>
     </div>
   </div>
 </template>
@@ -12,9 +12,10 @@
 <script>
 export default {
   name: 'ProductListElement',
-  props: {
-    product: {}
-  }
+  props: [
+    'product',
+    'withCount'
+  ]
 }
 </script>
 

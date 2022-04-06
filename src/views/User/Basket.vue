@@ -11,7 +11,7 @@
       </div>
       <div class="product-list">
         <div class="product" v-for="(product, index) in $store.getters['user/basket']" :key="index">
-          <ProductListElement :product="product"></ProductListElement>
+          <ProductListElement :product="product" :withCount="true"></ProductListElement>
           <input type="number" @change="() => watchCount(product.count)" v-model="product.count" min="1" max="20" />
           <input type="button" value="Видалити" @click="() => $store.commit('user/removeProduct', product.id)">
         </div>

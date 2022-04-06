@@ -65,6 +65,7 @@
       <ProductListElement
         v-for="(product, index) in ProductList"
         :product = product
+        :withCount = false
         :key="index"
       ></ProductListElement>
     </div>

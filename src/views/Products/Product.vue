@@ -60,10 +60,6 @@ export default {
     if (this.product.name === '') {
       return
     }
-    if (this.product.count === undefined) {
-      this.product.count = 1
-    }
-
     this.inBasket = this.$store.getters['user/basket'].map(value => value.id).includes(this.product.id)
   },
   watch: {

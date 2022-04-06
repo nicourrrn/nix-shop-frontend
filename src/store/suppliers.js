@@ -49,6 +49,7 @@ export default {
           .then(value => {
             value.data.forEach(p => {
               p.supplier = { id: s.id, name: s.name }
+              p.count = 1
               context.commit('addProduct', p)
             })
           })
